@@ -1,0 +1,14 @@
+# Lecture MP4s — hosted on YouTube instead (each ~67-104 MB; GitHub's 100 MB/file limit)
+# Posters in videos/posters/ ARE committed so the page shows preview frames.
+videos/*.mp4
+
+# Local artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python / editor cruft (build.py + _src/ themselves ARE committed as source-of-truth)
+__pycache__/
+*.pyc
+.vscode/
+.idea/

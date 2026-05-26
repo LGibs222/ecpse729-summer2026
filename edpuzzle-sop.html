@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edpuzzle + YouTube Deployment SOP · ECPSE 729</title>
+<meta name="description" content="Interactive walkthrough for uploading lecture videos to YouTube and configuring Edpuzzle for ECPSE 729 Summer 2026.">
+<meta name="theme-color" content="#a4232c">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=DM+Serif+Display:ital@0;1&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f3ede0;
+  --bg-warm: #ebe2cf;
+  --paper: #faf4e8;
+  --ink: #1a1612;
+  --ink-soft: #4a4038;
+  --signal: #a4232c;
+  --signal-soft: #c95a64;
+  --line: rgba(26, 22, 18, 0.15);
+  --ok: #2d7a3f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Manrope', -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+}
+header.sop-header {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 22px 32px 18px;
+  border-bottom: 4px double var(--signal);
+}
+header.sop-header .meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--signal-soft);
+  margin-bottom: 8px;
+}
+header.sop-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.05;
+  margin: 0 0 6px;
+  letter-spacing: -0.5px;
+}
+header.sop-header h1 .ital { font-style: italic; color: var(--signal-soft); }
+header.sop-header .sub {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: rgba(243, 237, 224, 0.75);
+}
+
+nav.progress-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 32px;
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.step-pill {
+  background: var(--bg-warm);
+  color: var(--ink-soft);
+  padding: 8px 14px;
+  border-radius: 2px;
+  border: 1px solid var(--line);
+  display: inline-flex; align-items: center; gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.step-pill:hover { background: var(--bg); border-color: var(--signal); }
+.step-pill.done {
+  background: var(--ok);
+  color: white;
+  border-color: var(--ok);
+}
+.step-pill.done::before { content: '✓ '; font-weight: 700; }
+.step-pill .num { font-weight: 700; color: var(--signal); }
+.step-pill.done .num { color: white; }
+
+main { max-width: 1180px; margin: 0 auto; padding: 40px 32px 80px; }
+
+.step {
+  margin: 50px 0;
+  padding: 28px 32px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--signal);
+}
+.step-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 20px;
+  margin-bottom: 12px;
+}
+.step-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+.step h2 {
+  font-family: 'DM Serif Display', serif;
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  margin: 4px 0 16px;
+}
+.step h2 .ital { font-style: italic; color: var(--signal); }
+.step .est {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  background: var(--bg-warm);
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.step ol, .step ul { padding-left: 22px; margin: 12px 0 18px; }
+.step li { margin-bottom: 8px; }
+.step strong { color: var(--signal); }
+
+details.lecture-card, details.external-card {
+  margin: 16px 0;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  padding: 0;
+}
+details.lecture-card[open], details.external-card[open] { border-color: var(--signal); }
+details summary {
+  cursor: pointer;
+  padding: 14px 20px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  background: var(--bg-warm);
+  list-style: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::after {
+  content: '+';
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  color: var(--signal);
+  transition: transform 0.2s;
+}
+details[open] summary::after { content: '−'; }
+details summary .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+.card-body { padding: 18px 22px 22px; }
+
+.kv {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  gap: 8px 14px;
+  align-items: start;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.kv:last-of-type { border-bottom: none; }
+.kv .k {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-top: 4px;
+}
+.kv .v {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.45;
+  word-break: break-word;
+}
+.kv .v.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  background: var(--bg-warm);
+  padding: 4px 6px;
+}
+.copy-btn {
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  padding: 5px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.copy-btn:hover { background: var(--signal); }
+.copy-btn.copied { background: var(--ok); }
+
+.kc {
+  margin: 14px 0;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--signal-soft);
+}
+.kc-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--signal);
+  margin-bottom: 8px;
+  display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap;
+}
+.kc-head .ts {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 3px 8px;
+  font-weight: 700;
+}
+.kc-q {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 8px 0;
+}
+.kc-options {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+.kc-options li {
+  padding: 6px 10px;
+  background: var(--bg-warm);
+  margin-bottom: 4px;
+  font-size: 13.5px;
+  display: flex; gap: 8px; align-items: flex-start;
+  border-left: 3px solid transparent;
+}
+.kc-options li.correct {
+  background: rgba(45, 122, 63, 0.12);
+  border-left-color: var(--ok);
+  font-weight: 600;
+}
+.kc-options li.correct::before {
+  content: '✓';
+  color: var(--ok);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.kc-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+.url-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 2px solid var(--line);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink);
+  margin-top: 8px;
+}
+.url-input:focus { outline: none; border-color: var(--signal); }
+.url-input.saved { border-color: var(--ok); background: rgba(45, 122, 63, 0.05); }
+.url-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 14px;
+  display: block;
+}
+
+.export-block {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 32px 36px;
+  margin: 60px 0 0;
+  border-top: 4px double var(--signal);
+}
+.export-block h2 {
+  font-family: 'DM Serif Display', serif;
+  color: var(--bg);
+  margin: 0 0 12px;
+}
+.export-block .desc {
+  color: rgba(243, 237, 224, 0.8);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.export-btn {
+  background: var(--signal);
+  color: var(--bg);
+  border: none;
+  padding: 14px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 700;
+}
+.export-btn:hover { background: white; color: var(--ink); }
+.export-output {
+  margin-top: 18px;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  white-space: pre-wrap;
+  max-height: 320px;
+  overflow-y: auto;
+  display: none;
+}
+.export-output.shown { display: block; }
+
+.mark-done-btn {
+  margin-top: 14px;
+  background: var(--bg-warm);
+  color: var(--ink-soft);
+  border: 2px solid var(--line);
+  padding: 10px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.mark-done-btn.done {
+  background: var(--ok);
+  color: white;
+  border-color: var(--ok);
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 12px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  z-index: 200;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.2s;
+  pointer-events: none;
+}
+.toast.shown { opacity: 1; transform: translateY(0); }
+
+.intro {
+  background: var(--paper);
+  padding: 28px 32px;
+  border: 1px solid var(--line);
+  margin: 30px 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.intro p { margin: 0 0 12px; }
+.intro p:last-child { margin: 0; }
+
+footer.sop-footer {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  padding: 30px;
+  border-top: 1px solid var(--line);
+  margin-top: 60px;
+}
+</style>
+</head>
+<body>
+
+<header class="sop-header">
+  <div class="meta">⚜ ECPSE 729 · Summer 2026 · Instructor SOP</div>
+  <h1><span class="ital">Edpuzzle</span> + YouTube Deployment.</h1>
+  <div class="sub">Step-by-step walkthrough · saves your progress as you go · ~2 hours focused work end-to-end</div>
+</header>
+
+<nav class="progress-bar" id="progressBar">
+  <a href="#step1" class="step-pill" data-step="1"><span class="num">01</span> Upload Lectures</a>
+  <a href="#step2" class="step-pill" data-step="2"><span class="num">02</span> Edpuzzle Class</a>
+  <a href="#step3" class="step-pill" data-step="3"><span class="num">03</span> Lecture KCs</a>
+  <a href="#step4" class="step-pill" data-step="4"><span class="num">04</span> External Prompts</a>
+  <a href="#step5" class="step-pill" data-step="5"><span class="num">05</span> Export URLs</a>
+</nav>
+
+<main>
+
+<div class="intro">
+  <p><strong>Use this page as a working tool.</strong> Open it in one browser tab while you work in YouTube Studio and Edpuzzle in others. Every paste-target (titles, descriptions, KC questions, options) has a <em>Copy</em> button — never retype. Every URL input saves automatically to your browser so you can close this and come back.</p>
+  <p><strong>When all 5 steps are checked off,</strong> click <em>Export progress</em> at the bottom and paste the result back to me in chat. I'll wire all 10 Edpuzzle URLs into the course site (~20 min) and we move on to deployment.</p>
+</div>
+
+<!-- ============ STEP 1 ============ -->
+<section class="step" id="step1">
+  <div class="step-head">
+    <div>
+      <div class="step-label">Step 01 · YouTube</div>
+      <h2>Upload 4 lecture MP4s as <span class="ital">Unlisted</span>.</h2>
+    </div>
+    <div class="est">~30 min</div>
+  </div>
+  <p>For each lecture below: open <a href="https://studio.youtube.com" target="_blank" rel="noopener">YouTube Studio</a>, click <strong>CREATE → Upload videos</strong>, drag the MP4 from the path shown, paste the title and description, set Visibility to <strong>UNLISTED</strong>, click PUBLISH, then paste the watch URL into the input field below.</p>
+  <p><strong>Settings to confirm on every upload:</strong> Audience = "No, it's not Made for Kids" · Visibility = Unlisted · Add to playlist "ECPSE 729 · Summer 2026 Lectures" (create on first upload).</p>
+  <div id="step1-lectures"></div>
+  <button class="mark-done-btn" data-step="1">Mark Step 1 Complete</button>
+</section>
+
+<!-- ============ STEP 2 ============ -->
+<section class="step" id="step2">
+  <div class="step-head">
+    <div>
+      <div class="step-label">Step 02 · Edpuzzle</div>
+      <h2>Create your <span class="ital">ECPSE 729</span> Edpuzzle class.</h2>
+    </div>
+    <div class="est">~10 min</div>
+  </div>
+  <ol>
+    <li>Sign into <a href="https://edpuzzle.com" target="_blank" rel="noopener">edpuzzle.com</a> (use QC Google SSO if you signed up that way).</li>
+    <li>Click <strong>Classes → New Class</strong> in the left sidebar.</li>
+    <li>Class name: <code>ECPSE 729 · Summer 2026 · Ethics &amp; Professionalism in ABA</code> <button class="copy-btn" data-copy="ECPSE 729 · Summer 2026 · Ethics &amp; Professionalism in ABA">Copy</button></li>
+    <li>Grade level: <strong>Graduate / Higher Ed</strong></li>
+    <li>Subject: <strong>Other → Behavior Analysis</strong></li>
+    <li>Class size: <strong>~12 students</strong> (adjust to your roster)</li>
+    <li>Save. Edpuzzle generates a join code and an invite link — paste the link below.</li>
+  </ol>
+  <label class="url-label" for="ep-class">Edpuzzle class join link / code</label>
+  <input type="text" class="url-input" id="ep-class" placeholder="https://edpuzzle.com/join/XXXXXXX or the 7-char code" data-key="ep_class">
+  <button class="mark-done-btn" data-step="2">Mark Step 2 Complete</button>
+</section>
+
+<!-- ============ STEP 3 ============ -->
+<section class="step" id="step3">
+  <div class="step-head">
+    <div>
+      <div class="step-label">Step 03 · Edpuzzle Lectures</div>
+      <h2>Build the <span class="ital">4 lecture</span> Edpuzzle assignments.</h2>
+    </div>
+    <div class="est">~45 min · ~12 min per lecture</div>
+  </div>
+  <p>For each lecture: Edpuzzle <strong>My Content → Add Content → Search YouTube</strong> → paste the YouTube URL from Step 1 → <em>Use It</em> → <em>Edit Video</em> → <em>Questions</em> tab. Then add the 8 KCs shown below at the listed timestamps. After all 8 added, save, then <em>Assign to your Class</em> with the appropriate Sunday due date.</p>
+  <div id="step3-lectures"></div>
+  <button class="mark-done-btn" data-step="3">Mark Step 3 Complete</button>
+</section>
+
+<!-- ============ STEP 4 ============ -->
+<section class="step" id="step4">
+  <div class="step-head">
+    <div>
+      <div class="step-label">Step 04 · External Videos</div>
+      <h2>Add <span class="ital">6 external videos</span> to Edpuzzle with prompts.</h2>
+    </div>
+    <div class="est">~30 min · ~5 min per video</div>
+  </div>
+  <p>These 6 videos are already on YouTube. Import each via Edpuzzle <strong>Add Content → Search YouTube</strong>, paste the URL, add the 2–3 Open-Ended prompts shown below at natural break-points (~25%, 50%, 75% is a reasonable default; you can adjust later). Save, assign to ECPSE 729 class.</p>
+  <div id="step4-externals"></div>
+  <button class="mark-done-btn" data-step="4">Mark Step 4 Complete</button>
+</section>
+
+<!-- ============ STEP 5 ============ -->
+<section class="step export-block" id="step5">
+  <div class="step-head">
+    <div>
+      <div class="step-label" style="color: var(--signal-soft);">Step 05 · Export</div>
+      <h2>Export your URLs and send them to me.</h2>
+    </div>
+    <div class="est" style="background: rgba(243,237,224,0.15); color: var(--bg);">~5 min</div>
+  </div>
+  <p class="desc">Click the button. A summary of every URL you entered above gets generated. Copy the whole block and paste it into our chat — I'll handle wiring everything into the course site.</p>
+  <button class="export-btn" id="exportBtn">Generate URL Summary →</button>
+  <pre class="export-output" id="exportOutput"></pre>
+</section>
+
+</main>
+
+<footer class="sop-footer">
+  ECPSE 729 · Summer 2026 · Edpuzzle SOP · Saves to browser localStorage · Clear by opening DevTools Console and running <code>localStorage.clear()</code>
+</footer>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+const DATA = {"lectures": [{"num": 1, "youtube_title": "ECPSE 729 · Module 01 · Foundations & The Self as Ethical Practitioner", "section": "Section 1.0", "duration": "28:45", "mp4_path": "OneDrive\\QC\\729 Ethics\\Summer 2026\\_lecture_module_01\\dist\\module_01_synced.mp4", "description": "ECPSE 729 — Ethics & Professionalism in Applied Behavior Analysis · Queens College, CUNY · Summer 2026 · Dr. Lenwood Gibson.\n\nInstructor-built walk-through of Section 1.0 of the 2022 BACB Ethics Code. Runtime 28:45. Includes 8 embedded knowledge checks delivered via Edpuzzle.\n\nFor enrolled ECPSE 729 students: complete this lecture via the Edpuzzle assignment in Brightspace; the YouTube embed is provided for reference and accessibility only. Course site: [PASTE_COURSE_SITE_URL_AFTER_DEPLOY]", "tags": "ECPSE 729, BCBA, BCaBA, ABA ethics, 2022 BACB Code, behavior analysis, supervision, Queens College, CUNY, Dr. Lenwood Gibson, graduate education", "kcs": [{"kc_num": 1, "segment_num": 2, "segment_title": "Why Ethics in ABA — Sunland, Willowbrook, Van Houten, BACB", "timestamp_seconds": 271.5, "timestamp_mmss": "04:31", "type": "Multiple Choice", "question": "Which 1988 paper articulated six rights of recipients of behavioral services and is widely cited as a foundational ethics document for the field?", "options": ["Skinner (1953) — Science and Human Behavior", "Baer, Wolf, & Risley (1968) — Some Current Dimensions of Applied Behavior Analysis", "Van Houten et al. (1988) — The Right to Effective Behavioral Treatment", "Cooper, Heron, & Heward (2020) — Applied Behavior Analysis"], "correct_answer": "Van Houten et al. (1988) — The Right to Effective Behavioral Treatment"}, {"kc_num": 2, "segment_num": 3, "segment_title": "Architecture of the 2022 Ethics Code", "timestamp_seconds": 376.1, "timestamp_mmss": "06:16", "type": "Matching", "question": "Match each Section of the 2022 Ethics Code to its title.", "options": ["1.0 → Responsibility as a Professional", "2.0 → Responsibility in Practice", "3.0 → Responsibility to Clients and Stakeholders", "4.0 → Responsibility to Supervisees and Trainees", "5.0 → Responsibility in Public Statements", "6.0 → Responsibility in Research"], "correct_answer": null}, {"kc_num": 3, "segment_num": 4, "segment_title": "ANCHOR — Code 1.05 Practicing within the Scope of Competence", "timestamp_seconds": 464.6, "timestamp_mmss": "07:44", "type": "Short Answer / Multiple Select", "question": "Code 1.05 defines competence in terms of three components a behavior analyst must access and document. Select all that apply.", "options": ["Education", "Training", "Supervised experience", "Years in the field", "Number of clients served", "Continuing education hours"], "correct_answer": "Supervised experience"}, {"kc_num": 4, "segment_num": 6, "segment_title": "ANCHOR — Code 1.07 Cultural Responsiveness and Diversity", "timestamp_seconds": 744.7, "timestamp_mmss": "12:24", "type": "Reflection", "question": "Identify one specific professional development activity related to cultural responsiveness you have engaged in within the past twelve months. If \"none\" is the honest answer, that is data — name it as your starting point.", "options": [], "correct_answer": null}, {"kc_num": 5, "segment_num": 8, "segment_title": "ANCHOR — Code 1.10 Awareness of Personal Biases and Challenges", "timestamp_seconds": 963.5, "timestamp_mmss": "16:03", "type": "Reflection", "question": "Name one personal bias, challenge, or condition that could realistically affect your ethical decision-making this semester. What is one action you would take to address it?", "options": [], "correct_answer": null}, {"kc_num": 6, "segment_num": 9, "segment_title": "CLUSTER — Boundaries & Power (Codes 1.11–1.14)", "timestamp_seconds": 1131.5, "timestamp_mmss": "18:51", "type": "Multiple Choice", "question": "A former RBT you supervised ended supervision with you eight months ago and now requests to begin supervision under your authority again. Under Code 1.14, this is:", "options": ["Prohibited — supervisees cannot be re-supervised by the same BCBA", "Permitted, with no additional considerations", "Permitted, because the six-month post-supervisory waiting period has been satisfied", "Permitted only if the BACB grants written approval"], "correct_answer": "Permitted, because the six-month post-supervisory waiting period has been satisfied"}, {"kc_num": 7, "segment_num": 11, "segment_title": "The 11-Step Decision Model + Worked Example", "timestamp_seconds": 1427.5, "timestamp_mmss": "23:47", "type": "Short Answer", "question": "Step 5 of the model asks you to consider your own learning history and biases. Which standard in Section 1.0 is this step operationalizing? Briefly explain how.", "options": [], "correct_answer": null}, {"kc_num": 8, "segment_num": 13, "segment_title": "Scope-of-Competence Audit (Toolkit Artifact 1)", "timestamp_seconds": 1655.9, "timestamp_mmss": "27:35", "type": "Reflection", "question": "Name one area in your developing scope. What specific supervision, training, or experience would close the gap to current scope?", "options": [], "correct_answer": null}]}, {"num": 2, "youtube_title": "ECPSE 729 · Module 02 · Effective Treatment, Clients & ABA's Critics", "section": "Section 2.0", "duration": "21:44", "mp4_path": "OneDrive\\QC\\729 Ethics\\Summer 2026\\_lecture_module_02\\dist\\module_02_synced.mp4", "description": "ECPSE 729 — Ethics & Professionalism in Applied Behavior Analysis · Queens College, CUNY · Summer 2026 · Dr. Lenwood Gibson.\n\nInstructor-built walk-through of Section 2.0 of the 2022 BACB Ethics Code. Runtime 21:44. Includes 8 embedded knowledge checks delivered via Edpuzzle.\n\nFor enrolled ECPSE 729 students: complete this lecture via the Edpuzzle assignment in Brightspace; the YouTube embed is provided for reference and accessibility only. Course site: [PASTE_COURSE_SITE_URL_AFTER_DEPLOY]", "tags": "ECPSE 729, BCBA, BCaBA, ABA ethics, 2022 BACB Code, behavior analysis, supervision, Queens College, CUNY, Dr. Lenwood Gibson, graduate education", "kcs": [{"kc_num": 1, "segment_num": 2, "segment_title": "ABA's Critics — Effective Treatment in the Age of Self-Advocacy", "timestamp_seconds": 208.5, "timestamp_mmss": "03:28", "type": "Multiple Choice", "question": "Which of the following best characterizes a competent behavior analyst's posture toward the neurodiversity-movement critique of ABA in 2026?", "options": ["Dismiss the critique because the Code already protects against the practices it names", "Adopt the critique fully and stop using behavior-analytic methods entirely", "Read the critique seriously, acknowledge the historical and ongoing harms it names, and let it inform how you practice Section 2.0", "Refer all autistic clients to non-behavioral providers"], "correct_answer": "Read the critique seriously, acknowledge the historical and ongoing harms it names, and let it inform how you practice Section 2.0"}, {"kc_num": 2, "segment_num": 3, "segment_title": "The Map of Section 2.0", "timestamp_seconds": 286.7, "timestamp_mmss": "04:46", "type": "Matching", "question": "Match each Section 2.0 cluster to a sample standard that belongs to it.", "options": ["Effective Treatment Operations → 2.14 (Selecting/Designing/Implementing Behavior-Change Interventions)", "Communication, Consent, and Care → 2.11 (Obtaining Informed Consent)", "Confidentiality and Documentation → 2.03 (Protecting Confidential Information)", "Business of Practice → 2.07 (Fees)", "Data and Evaluation → 2.17 (Collecting and Using Data)"], "correct_answer": null}, {"kc_num": 3, "segment_num": 4, "segment_title": "ANCHOR — Code 2.01 Providing Effective Treatment", "timestamp_seconds": 400.9, "timestamp_mmss": "06:40", "type": "Multiple Choice", "question": "Code 2.01 requires that services be conceptually consistent with behavior-analytic principles, based on scientific evidence, AND:", "options": ["Approved by the BACB before implementation", "Designed to maximize desired outcomes for and protect all clients and stakeholders from harm", "Funded by an insurance provider", "Identical to the procedures originally published by Lovaas"], "correct_answer": "Designed to maximize desired outcomes for and protect all clients and stakeholders from harm"}, {"kc_num": 4, "segment_num": 6, "segment_title": "ANCHOR — Code 2.09 Involving Clients and Stakeholders", "timestamp_seconds": 599.7, "timestamp_mmss": "09:59", "type": "Reflection", "question": "Identify one specific moment in your current or recent practice where a goal was selected without meaningful client or stakeholder input. What would Code 2.09 have asked you to do differently?", "options": [], "correct_answer": null}, {"kc_num": 5, "segment_num": 8, "segment_title": "ANCHOR — Code 2.15 Minimizing Risk of Behavior-Change Interventions", "timestamp_seconds": 817.0, "timestamp_mmss": "13:36", "type": "Multiple Choice", "question": "Under Code 2.15, a behavior analyst may recommend a restrictive or punishment-based procedure:", "options": ["Whenever the team agrees it is the fastest path to behavior change", "Only after demonstrating with data that less intrusive interventions, such as positive reinforcement, are insufficient", "When the parent specifically requests it", "Never — restrictive procedures are prohibited under the 2022 Code"], "correct_answer": "Only after demonstrating with data that less intrusive interventions, such as positive reinforcement, are insufficient"}, {"kc_num": 6, "segment_num": 9, "segment_title": "CLUSTER — Confidentiality & Documentation (Codes 2.03, 2.04, 2.05)", "timestamp_seconds": 896.7, "timestamp_mmss": "14:56", "type": "Multiple Choice", "question": "A police officer arrives at your agency without a court order and asks for information about a client involved in an incident. Under Code 2.04, you may share:", "options": ["Whatever the officer requests, since police are an authority", "Nothing without a court order or signed consent from the client/stakeholder, unless the officer can establish an immediate threat-to-life scenario", "Only the client's name and address", "All records the officer requests, provided you document the disclosure"], "correct_answer": "Nothing without a court order or signed consent from the client/stakeholder, unless the officer can establish an immediate threat-to-life scenario"}, {"kc_num": 7, "segment_num": 12, "segment_title": "A Worked Scenario — Section 2.0 in Real Time", "timestamp_seconds": 1179.0, "timestamp_mmss": "19:38", "type": "Short Answer", "question": "In the scenario above, identify TWO specific Section 2.0 standards that argue against immediately adding a restraint protocol, and briefly explain how each applies.", "options": [], "correct_answer": null}, {"kc_num": 8, "segment_num": 14, "segment_title": "This Week's Work + Module Close", "timestamp_seconds": 1304.5, "timestamp_mmss": "21:44", "type": "Reflection", "question": "Looking ahead — name one Section 2.0 standard from this module that you anticipate being most challenging to live out in your current or next practice setting, and why.", "options": [], "correct_answer": null}]}, {"num": 3, "youtube_title": "ECPSE 729 · Module 03 · Clients, Supervision & the Digital Practitioner", "section": "Sections 3.0 + 4.0", "duration": "16:45", "mp4_path": "OneDrive\\QC\\729 Ethics\\Summer 2026\\_lecture_module_03\\dist\\module_03_synced.mp4", "description": "ECPSE 729 — Ethics & Professionalism in Applied Behavior Analysis · Queens College, CUNY · Summer 2026 · Dr. Lenwood Gibson.\n\nInstructor-built walk-through of Sections 3.0 + 4.0 of the 2022 BACB Ethics Code. Runtime 16:45. Includes 8 embedded knowledge checks delivered via Edpuzzle.\n\nFor enrolled ECPSE 729 students: complete this lecture via the Edpuzzle assignment in Brightspace; the YouTube embed is provided for reference and accessibility only. Course site: [PASTE_COURSE_SITE_URL_AFTER_DEPLOY]", "tags": "ECPSE 729, BCBA, BCaBA, ABA ethics, 2022 BACB Code, behavior analysis, supervision, Queens College, CUNY, Dr. Lenwood Gibson, graduate education", "kcs": [{"kc_num": 1, "segment_num": 2, "segment_title": "ANCHOR - Code 3.04 Service Agreement", "timestamp_seconds": 116.8, "timestamp_mmss": "01:56", "type": "Multiple Choice", "question": "Code 3.04 requires the service agreement to be in place:", "options": ["Within the first 90 days of services", "Before implementing services", "When the client requests it", "At any point before the case is closed"], "correct_answer": "Before implementing services"}, {"kc_num": 2, "segment_num": 4, "segment_title": "CLUSTER - Third-Party Mechanics (Codes 3.05, 3.07, 3.08, 3.09)", "timestamp_seconds": 276.7, "timestamp_mmss": "04:36", "type": "Multiple Choice", "question": "A school district contracts you to provide services to a student. The district pressures you to discontinue a behavior plan they find inconvenient, even though it is producing benefit for the student. Under Code 3.08, your obligation is to:", "options": ["Discontinue the plan because the district is the contracting party", "Resolve the conflict in favor of the client's interests; if it cannot be resolved, take additional measures up to discontinuing services", "Inform the BACB immediately", "Continue the plan secretly without district approval"], "correct_answer": "Resolve the conflict in favor of the client's interests; if it cannot be resolved, take additional measures up to discontinuing services"}, {"kc_num": 3, "segment_num": 6, "segment_title": "ANCHOR - Code 3.14 Facilitate Continuity of Services", "timestamp_seconds": 430.7, "timestamp_mmss": "07:10", "type": "Reflection", "question": "Identify one transition (BCBA change, agency change, setting change) in your current or recent practice where continuity could have been handled better. What would Code 3.14 have asked you to do?", "options": [], "correct_answer": null}, {"kc_num": 4, "segment_num": 8, "segment_title": "ANCHOR - Code 4.06 Provide Supervision and Training", "timestamp_seconds": 586.6, "timestamp_mmss": "09:46", "type": "Multiple Choice", "question": "Code 4.06 requires that supervision be: (select all that apply)", "options": ["In compliance with applicable requirements", "Evidence-based", "Based on positive reinforcement", "Individualized to the supervisee", "Identical for every supervisee", "Conducted only in person"], "correct_answer": "Individualized to the supervisee"}, {"kc_num": 8, "segment_num": 9, "segment_title": "CLUSTER - Section 4.0 Foundations (Codes 4.01, 4.02, 4.05)", "timestamp_seconds": 652.6, "timestamp_mmss": "10:52", "type": "Multiple Choice", "question": "Code 4.02 (Supervisory Competence) requires that supervisors:", "options": ["Have at least 2 years of BCBA experience before supervising", "Supervise within their own scope of competence and obtain knowledge/skills in effective supervision practices before providing supervision", "Hold a doctorate before supervising", "Receive BACB approval before each new supervisee"], "correct_answer": "Supervise within their own scope of competence and obtain knowledge/skills in effective supervision practices before providing supervision"}, {"kc_num": 5, "segment_num": 11, "segment_title": "CLUSTER - Supervision Quality (Codes 4.07, 4.08, 4.09, 4.10)", "timestamp_seconds": 780.3, "timestamp_mmss": "13:00", "type": "Multiple Choice", "question": "A new supervisee asks if she can run a behavior intervention you are confident she can implement, but the procedure is outside her training. Under Code 4.09, you should:", "options": ["Delegate the task because you trust her judgment", "Decline to delegate; either train her first or assign the task to a competent staff member", "Allow her to attempt it with close supervision", "Refer the case to another agency"], "correct_answer": "Decline to delegate; either train her first or assign the task to a competent staff member"}, {"kc_num": 6, "segment_num": 13, "segment_title": "A Worked Moment - Section 3.0 + 4.0 in One Case", "timestamp_seconds": 928.1, "timestamp_mmss": "15:28", "type": "Short Answer", "question": "Identify three Code citations from Sections 3.0 or 4.0 that argue against unilateral discontinuation in the scenario above. Briefly explain each.", "options": [], "correct_answer": null}, {"kc_num": 7, "segment_num": 14, "segment_title": "This Week's Work + Bridge to Module 04", "timestamp_seconds": 1005.3, "timestamp_mmss": "16:45", "type": "Reflection", "question": "Looking back across Modules 01-03 - name the single code from Sections 1.0, 2.0, 3.0, or 4.0 that you have grown most in your understanding of, and why.", "options": [], "correct_answer": null}]}, {"num": 4, "youtube_title": "ECPSE 729 · Module 04 · Public Statements, Research & Enforcement", "section": "Sections 5.0 + 6.0 + Enforcement", "duration": "16:42", "mp4_path": "OneDrive\\QC\\729 Ethics\\Summer 2026\\_lecture_module_04\\dist\\module_04_synced.mp4", "description": "ECPSE 729 — Ethics & Professionalism in Applied Behavior Analysis · Queens College, CUNY · Summer 2026 · Dr. Lenwood Gibson.\n\nInstructor-built walk-through of Sections 5.0 + 6.0 + Enforcement of the 2022 BACB Ethics Code. Runtime 16:42. Includes 8 embedded knowledge checks delivered via Edpuzzle.\n\nFor enrolled ECPSE 729 students: complete this lecture via the Edpuzzle assignment in Brightspace; the YouTube embed is provided for reference and accessibility only. Course site: [PASTE_COURSE_SITE_URL_AFTER_DEPLOY]", "tags": "ECPSE 729, BCBA, BCaBA, ABA ethics, 2022 BACB Code, behavior analysis, supervision, Queens College, CUNY, Dr. Lenwood Gibson, graduate education", "kcs": [{"kc_num": 1, "segment_num": 2, "segment_title": "Theme - Stewarding the Profession", "timestamp_seconds": 91.9, "timestamp_mmss": "01:31", "type": "Multiple Choice", "question": "What is the through-line that distinguishes Sections 5.0 and 6.0 from Sections 1.0 through 4.0?", "options": ["They contain stricter penalties for violations", "They address how the field - not just the individual - presents itself to the public and produces knowledge", "They apply only to behavior analysts with doctoral training", "They are optional standards rather than required"], "correct_answer": "They address how the field - not just the individual - presents itself to the public and produces knowledge"}, {"kc_num": 2, "segment_num": 3, "segment_title": "ANCHOR - Code 5.10 Social Media Channels and Websites", "timestamp_seconds": 184.4, "timestamp_mmss": "03:04", "type": "Multiple Choice", "question": "Under Code 5.10, posting about your work on a PERSONAL (non-professional) social media account:", "options": ["Is permitted with informed consent from the client", "Is permitted as long as the post does not identify the client by name", "Is not permitted at all - personal accounts cannot publish client information", "Is permitted if a disclaimer is added"], "correct_answer": "Is not permitted at all - personal accounts cannot publish client information"}, {"kc_num": 3, "segment_num": 6, "segment_title": "CLUSTER - Testimonials (Codes 5.07, 5.08, 5.09)", "timestamp_seconds": 395.1, "timestamp_mmss": "06:35", "type": "Multiple Choice", "question": "Under Code 5.07, soliciting testimonials from CURRENT clients for advertising purposes is:", "options": ["Permitted with informed consent", "Permitted if the testimonial is anonymized", "Not permitted", "Permitted only after the client meets their goals"], "correct_answer": "Not permitted"}, {"kc_num": 4, "segment_num": 9, "segment_title": "ANCHOR - Code 6.11 Accuracy and Use of Data", "timestamp_seconds": 584.6, "timestamp_mmss": "09:44", "type": "Multiple Choice", "question": "Under Code 6.11, the appropriate response when you discover a data error in published research you authored is to:", "options": ["Quietly correct the data in your records and move on", "Take steps to correct the error - including notifying the journal and co-authors and issuing corrections", "Wait for someone else to catch it first", "Add a footnote in your next publication acknowledging it"], "correct_answer": "Take steps to correct the error - including notifying the journal and co-authors and issuing corrections"}, {"kc_num": 5, "segment_num": 11, "segment_title": "CLUSTER - Publication Integrity (Codes 6.07, 6.08, 6.09, 6.10)", "timestamp_seconds": 709.1, "timestamp_mmss": "11:49", "type": "Multiple Choice", "question": "You publish a study and later realize you reused two paragraphs verbatim from your own previously published paper without citing it. Under the 2022 Code, this is:", "options": ["Acceptable - it's your own work", "A 6.09 violation (self-plagiarism / not disclosing prior publication)", "A 6.07 violation (conflict of interest)", "Not addressed by the Code"], "correct_answer": "A 6.09 violation (self-plagiarism / not disclosing prior publication)"}, {"kc_num": 6, "segment_num": 12, "segment_title": "CONCEPT - Code Enforcement Procedures", "timestamp_seconds": 811.4, "timestamp_mmss": "13:31", "type": "Multiple Choice", "question": "In BACB Code Enforcement proceedings, the burden of proof is:", "options": ["Beyond a reasonable doubt", "Preponderance of evidence", "Clear and convincing evidence", "There is no defined burden of proof"], "correct_answer": "Preponderance of evidence"}, {"kc_num": 7, "segment_num": 13, "segment_title": "Worked Scenario - 5.0 + 6.0 in One Case", "timestamp_seconds": 909.5, "timestamp_mmss": "15:09", "type": "Short Answer", "question": "Identify three Code citations from Sections 5.0 or 6.0 that argue against posting the children's footage on Instagram in the scenario above. Briefly explain each.", "options": [], "correct_answer": null}, {"kc_num": 8, "segment_num": 14, "segment_title": "Final Reflection + Course Close", "timestamp_seconds": 1002.0, "timestamp_mmss": "16:42", "type": "Reflection", "question": "Across all four modules of ECPSE 729 - what is the single most important shift in how you understand the BACB Ethics Code now compared to when you started this course?", "options": [], "correct_answer": null}]}], "externals": [{"module": 1, "slot": "Video 01", "title": "Willowbrook: The Path Forward", "youtube_url": "https://www.youtube.com/watch?v=ev80qEtp2u4", "prompts": ["What conditions at Willowbrook were uncovered, and who exposed them?", "Identify two ways the Willowbrook scandal directly shaped the BACB Ethics Code.", "How does the principle of Right to Effective Treatment connect to what failed at Willowbrook?"]}, {"module": 1, "slot": "Video 02", "title": "Unforgotten: Twenty-Five Years After Willowbrook", "youtube_url": "https://www.youtube.com/watch?v=HNLyKW8fCNg", "prompts": ["What does the documentary suggest is still incomplete about the Willowbrook reform legacy?", "Identify one specific obligation a current BCBA has, traceable to a lesson from Willowbrook."]}, {"module": 2, "slot": "Video 01", "title": "Client Assent in Behavior Analysis — Cody Morris (Behavioral Observations S313)", "youtube_url": "https://www.youtube.com/watch?v=0oz4yjueahY", "prompts": ["How does the panel operationally define assent — what behaviors count as giving it, withholding it, and withdrawing it?", "Identify two situations from the conversation where consent was present but assent was unclear or absent.", "What does the panel recommend when assent and consent point in different directions?"]}, {"module": 3, "slot": "Video 01", "title": "Inside the BACB Ep. 21 — Responsibility to Supervisees and Trainees (Carr & Sellers)", "youtube_url": "https://www.youtube.com/watch?v=RiNiMVDQ004", "prompts": ["What are the panel's three biggest \"watch-out\" categories in supervision under the 2022 Code?", "Identify one specific supervision practice they critique that you've seen (or done). What would change look like, concretely?", "What does the panel say about supervising a supervisee who is also your direct subordinate or coworker?"]}, {"module": 3, "slot": "Video 02", "title": "ABA Inside Track Ep. 51 — Ethics and Social Media", "youtube_url": "https://www.youtube.com/watch?v=ULxPODLHe58", "prompts": ["What does the speaker identify as the difference between an \"educational\" post and an unauthorized testimonial?", "Identify two ways content can be identifying even when faces are blurred.", "What's the speaker's stance on a BCBA's personal social media account — is it really \"personal\" if they list their credential?"]}, {"module": 3, "slot": "Video 03", "title": "Ethical Behavior Analysis in the Age of AI — Hi Rasmus (Cook · O'Donnell · Cox)", "youtube_url": "https://www.youtube.com/watch?v=AOel2Oynd-c", "prompts": ["What does the speaker identify as the most common ethical failure in AI-assisted clinical work right now?", "Identify one disclosure the speaker argues is mandatory and one they argue is debatable.", "How does the speaker recommend BCBAs verify AI-generated content — what's the \"trust but verify\" workflow?"]}]};
+const LS = 'ecpse729_sop';
+
+// ============ State management ============
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(LS) || '{}'); }
+  catch (e) { return {}; }
+}
+function saveState(s) { localStorage.setItem(LS, JSON.stringify(s)); }
+let STATE = loadState();
+STATE.urls = STATE.urls || {};
+STATE.steps = STATE.steps || {};
+
+// ============ Toast ============
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('shown');
+  setTimeout(() => t.classList.remove('shown'), 1400);
+}
+
+// ============ Copy buttons ============
+function bindCopyButtons() {
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const text = btn.getAttribute('data-copy');
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.classList.add('copied');
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied';
+        toast('Copied to clipboard');
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 1400);
+      } catch (err) {
+        toast('Copy failed — select manually');
+      }
+    });
+  });
+}
+
+// ============ URL inputs ============
+function bindUrlInputs() {
+  document.querySelectorAll('.url-input').forEach(input => {
+    const key = input.getAttribute('data-key');
+    if (STATE.urls[key]) {
+      input.value = STATE.urls[key];
+      input.classList.add('saved');
+    }
+    input.addEventListener('input', () => {
+      STATE.urls[key] = input.value.trim();
+      saveState(STATE);
+      input.classList.toggle('saved', !!input.value.trim());
+    });
+  });
+}
+
+// ============ Step completion ============
+function updateProgressBar() {
+  document.querySelectorAll('.step-pill').forEach(pill => {
+    const step = pill.getAttribute('data-step');
+    pill.classList.toggle('done', !!STATE.steps[step]);
+  });
+}
+function bindMarkDone() {
+  document.querySelectorAll('.mark-done-btn').forEach(btn => {
+    const step = btn.getAttribute('data-step');
+    if (STATE.steps[step]) { btn.classList.add('done'); btn.textContent = '✓ Step ' + step + ' Complete'; }
+    btn.addEventListener('click', () => {
+      STATE.steps[step] = !STATE.steps[step];
+      saveState(STATE);
+      btn.classList.toggle('done', !!STATE.steps[step]);
+      btn.textContent = STATE.steps[step] ? '✓ Step ' + step + ' Complete' : 'Mark Step ' + step + ' Complete';
+      updateProgressBar();
+    });
+  });
+}
+
+// ============ Render lectures into Step 1 + Step 3 ============
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderStep1() {
+  const c = document.getElementById('step1-lectures');
+  c.innerHTML = DATA.lectures.map(L => {
+    const titleEsc = escapeHtml(L.youtube_title);
+    const descEsc = escapeHtml(L.description);
+    const tagsEsc = escapeHtml(L.tags);
+    return `
+      <details class="lecture-card">
+        <summary>
+          <span>Lecture ${L.num} · ${escapeHtml(L.section)} · ${L.duration}</span>
+          <span class="tag">Click to expand</span>
+        </summary>
+        <div class="card-body">
+          <div class="kv">
+            <div class="k">YouTube Title</div>
+            <div class="v">${titleEsc}</div>
+            <button class="copy-btn" data-copy="${titleEsc.replace(/"/g,'&quot;')}">Copy</button>
+          </div>
+          <div class="kv">
+            <div class="k">MP4 Path</div>
+            <div class="v mono">${escapeHtml(L.mp4_path)}</div>
+            <button class="copy-btn" data-copy="${escapeHtml(L.mp4_path).replace(/"/g,'&quot;')}">Copy</button>
+          </div>
+          <div class="kv">
+            <div class="k">Description</div>
+            <div class="v" style="white-space: pre-wrap;">${descEsc}</div>
+            <button class="copy-btn" data-copy="${descEsc.replace(/"/g,'&quot;').replace(/\n/g,'&#10;')}">Copy</button>
+          </div>
+          <div class="kv">
+            <div class="k">Tags</div>
+            <div class="v">${tagsEsc}</div>
+            <button class="copy-btn" data-copy="${tagsEsc.replace(/"/g,'&quot;')}">Copy</button>
+          </div>
+          <div class="kv">
+            <div class="k">Thumbnail</div>
+            <div class="v mono">videos/posters/module_${String(L.num).padStart(2,'0')}.jpg</div>
+            <button class="copy-btn" data-copy="videos/posters/module_${String(L.num).padStart(2,'0')}.jpg">Copy</button>
+          </div>
+          <label class="url-label" for="yt-${L.num}">YouTube watch URL (paste after publishing)</label>
+          <input type="text" class="url-input" id="yt-${L.num}" placeholder="https://www.youtube.com/watch?v=__________" data-key="yt_lecture_${L.num}">
+        </div>
+      </details>`;
+  }).join('');
+}
+
+function renderStep3() {
+  const c = document.getElementById('step3-lectures');
+  c.innerHTML = DATA.lectures.map(L => {
+    const kcsHtml = L.kcs.map(kc => {
+      const qEsc = escapeHtml(kc.question);
+      const opts = (kc.options || []).map(opt => {
+        const isCorrect = opt === kc.correct_answer;
+        return `<li class="${isCorrect ? 'correct' : ''}"><span>${escapeHtml(opt)}</span></li>`;
+      }).join('');
+      return `
+        <div class="kc">
+          <div class="kc-head">
+            <span class="ts">${kc.timestamp_mmss}</span>
+            <span>KC ${kc.kc_num} · ${escapeHtml(kc.type)}</span>
+          </div>
+          <div class="kc-q">${qEsc}</div>
+          ${opts ? `<ul class="kc-options">${opts}</ul>` : ''}
+          <div class="kc-actions">
+            <button class="copy-btn" data-copy="${qEsc.replace(/"/g,'&quot;')}">Copy Question</button>
+            ${(kc.options || []).length ? `<button class="copy-btn" data-copy="${(kc.options || []).map(o => escapeHtml(o)).join('\\n').replace(/"/g,'&quot;')}">Copy All Options</button>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+    return `
+      <details class="lecture-card">
+        <summary>
+          <span>Lecture ${L.num} · ${L.kcs.length} KCs · ${L.duration}</span>
+          <span class="tag">Click to expand</span>
+        </summary>
+        <div class="card-body">
+          ${kcsHtml}
+          <label class="url-label" for="ep-lecture-${L.num}">Edpuzzle assignment URL (paste after creating)</label>
+          <input type="text" class="url-input" id="ep-lecture-${L.num}" placeholder="https://edpuzzle.com/assignments/__________/watch" data-key="ep_lecture_${L.num}">
+        </div>
+      </details>`;
+  }).join('');
+}
+
+function renderStep4() {
+  const c = document.getElementById('step4-externals');
+  c.innerHTML = DATA.externals.map((v, i) => {
+    const promptsHtml = v.prompts.map(p => `<li>${escapeHtml(p)} <button class="copy-btn" data-copy="${escapeHtml(p).replace(/"/g,'&quot;')}">Copy</button></li>`).join('');
+    return `
+      <details class="external-card">
+        <summary>
+          <span>M${String(v.module).padStart(2,'0')} · ${escapeHtml(v.slot)} · ${escapeHtml(v.title.slice(0,55))}${v.title.length > 55 ? '…' : ''}</span>
+          <span class="tag">Click to expand</span>
+        </summary>
+        <div class="card-body">
+          <div class="kv">
+            <div class="k">Title</div>
+            <div class="v">${escapeHtml(v.title)}</div>
+            <button class="copy-btn" data-copy="${escapeHtml(v.title).replace(/"/g,'&quot;')}">Copy</button>
+          </div>
+          <div class="kv">
+            <div class="k">YouTube URL</div>
+            <div class="v mono">${escapeHtml(v.youtube_url)}</div>
+            <button class="copy-btn" data-copy="${escapeHtml(v.youtube_url).replace(/"/g,'&quot;')}">Copy</button>
+          </div>
+          <p style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);margin:14px 0 4px;">Open-Ended prompts (no auto-grading)</p>
+          <ol>${promptsHtml}</ol>
+          <label class="url-label" for="ep-ext-${i}">Edpuzzle assignment URL (paste after creating)</label>
+          <input type="text" class="url-input" id="ep-ext-${i}" placeholder="https://edpuzzle.com/assignments/__________/watch" data-key="ep_external_${i}">
+        </div>
+      </details>`;
+  }).join('');
+}
+
+// ============ Export ============
+function bindExport() {
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    let out = '## ECPSE 729 Edpuzzle Setup — URL Report\\n\\n';
+    out += '### Step 1 — YouTube Unlisted URLs (4 lecture videos)\\n';
+    DATA.lectures.forEach(L => {
+      out += `- Lecture ${L.num} (${L.section}): ${STATE.urls['yt_lecture_' + L.num] || '⚠ MISSING'}\\n`;
+    });
+    out += `\\n### Step 2 — Edpuzzle class join link/code\\n${STATE.urls['ep_class'] || '⚠ MISSING'}\\n\\n`;
+    out += '### Step 3 — Lecture Edpuzzle assignment URLs\\n';
+    DATA.lectures.forEach(L => {
+      out += `- Lecture ${L.num}: ${STATE.urls['ep_lecture_' + L.num] || '⚠ MISSING'}\\n`;
+    });
+    out += '\\n### Step 4 — External video Edpuzzle URLs\\n';
+    DATA.externals.forEach((v, i) => {
+      out += `- M${String(v.module).padStart(2,'0')} · ${v.slot} (${v.title.slice(0,50)}): ${STATE.urls['ep_external_' + i] || '⚠ MISSING'}\\n`;
+    });
+    out += '\\n### Completion\\n';
+    [1,2,3,4].forEach(s => { out += `- Step ${s}: ${STATE.steps[s] ? '✓ done' : '⚠ not marked complete'}\\n`; });
+    const o = document.getElementById('exportOutput');
+    o.textContent = out;
+    o.classList.add('shown');
+    navigator.clipboard.writeText(out).then(() => toast('Summary copied to clipboard'));
+  });
+}
+
+// ============ Init ============
+renderStep1();
+renderStep3();
+renderStep4();
+bindCopyButtons();
+bindUrlInputs();
+bindMarkDone();
+bindExport();
+updateProgressBar();
+</script>
+
+</body>
+</html>
