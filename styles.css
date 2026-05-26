@@ -841,7 +841,8 @@ footer .stamp { color: var(--signal); font-weight: 700; }
 .lecture-stage .lecture-video {
   margin-top: 28px;
 }
-.lecture-stage .lecture-video video {
+.lecture-stage .lecture-video video,
+.lecture-stage .lecture-video iframe {
   display: block;
   margin: 0 auto;
   max-width: 100%;
@@ -849,6 +850,10 @@ footer .stamp { color: var(--signal); font-weight: 700; }
   border: 1px solid var(--signal);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
   background: #000;
+}
+.lecture-stage .lecture-video iframe {
+  aspect-ratio: 16 / 9;
+  height: auto;
 }
 .lecture-stage .lecture-video p {
   font-family: 'DM Serif Display', serif;
