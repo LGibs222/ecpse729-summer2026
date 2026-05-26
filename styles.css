@@ -217,13 +217,17 @@ nav.bar a.bs:hover { background: var(--bg); }
 .hero h1 {
   font-family: 'DM Serif Display', serif;
   font-weight: 400;
-  font-size: clamp(56px, 7.4vw, 124px);
+  font-size: clamp(40px, 7.4vw, 124px);
   line-height: 0.95;
   letter-spacing: -2.5px;
   color: var(--ink);
   margin-bottom: 28px;
   opacity: 0;
   animation: slideIn 0.8s 0.15s ease forwards;
+  /* Safety net for narrow viewports — long words like "Professionalism" / "Practitioner"
+     would otherwise overflow the column at 375px wide. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 .hero h1 .ital { font-style: italic; color: var(--signal); }
 .hero h1 .amp { font-family: 'Italiana', serif; color: var(--silver-deep); font-weight: 400; font-style: italic; font-size: 0.9em; }
@@ -695,6 +699,16 @@ footer .stamp { color: var(--signal); font-weight: 700; }
   header.site .center { display: none; }
   .res-row { grid-template-columns: 90px 1fr; }
   .res-row .meta { grid-column: 1 / -1; text-align: left; }
+}
+@media (max-width: 480px) {
+  /* Phone-sized viewports — tighten outer padding so the hero column gets more room
+     and big words don't get force-broken. */
+  .hero { padding: 40px 18px 36px; }
+  .hero h1 { letter-spacing: -1px; }
+  .module-section { padding: 50px 18px 24px; }
+  .lecture-stage { padding: 50px 18px 40px; }
+  .preview-dark { padding: 60px 18px; }
+  nav.bar { padding: 0 14px; }
 }
 
 /* === UTILITY CLASSES (extracted from inline styles) === */
