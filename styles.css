@@ -286,6 +286,27 @@ nav.bar a.bs:hover { background: var(--bg); }
   transition: all 0.15s;
 }
 .side-widget .enter:hover, .side-widget .submit-bs:hover { background: var(--ink); }
+/* Secondary (non-CTA) link in the side widget — used for the syllabus PDF under the Brightspace button */
+.side-widget .syllabus-link {
+  display: block;
+  margin-top: 10px;
+  padding: 13px 0;
+  text-align: center;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+.side-widget .syllabus-link:hover { background: var(--ink); color: var(--bg); }
+/* Inline links inside the side-widget "Start Here" list (home page) */
+.side-widget li a { color: var(--signal); text-decoration: underline; text-underline-offset: 2px; }
+.side-widget li a:hover { color: var(--ink); }
 
 /* === SECTION HEADS === */
 .section-head {
@@ -775,6 +796,16 @@ footer .stamp { color: var(--signal); font-weight: 700; }
   color: var(--bg);
 }
 .welcome-video h2 .ital { font-style: italic; color: var(--signal-soft); }
+.welcome-video-cta { text-align: center; margin: 4px 0 20px 0; }
+.welcome-video-lead {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(243, 237, 224, 0.92);
+  max-width: 720px;
+  margin: 0 auto 30px auto;
+}
+.welcome-video-cta .btn-primary { font-size: 14px; padding: 16px 34px; }
 .welcome-video .video-wrap {
   border: 1px solid var(--signal);
   margin: 0 0 20px 0;

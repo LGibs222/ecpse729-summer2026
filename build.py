@@ -113,17 +113,19 @@ INTRO_NAV = [
 ]
 
 # Extra nav items beyond modules (Syllabus, Resources)
+# An open item with a "url" links to that URL (PDF/external); otherwise it links
+# to "{slug}.html". Set "external": True to open in a new tab.
 EXTRA_NAV = [
-    {"slug": "syllabus", "label": "Syllabus", "status": "locked",
-     "aria": "Syllabus — link coming soon"},
+    {"slug": "syllabus", "label": "Syllabus", "status": "open",
+     "url": "handouts/ECPSE-729-Syllabus-Summer-2026.pdf", "external": True},
     {"slug": "resources", "label": "Resources", "status": "locked",
      "aria": "Resources — link coming soon"},
 ]
 
 # External nav (Brightspace, always last, styled .bs)
 EXTERNAL_NAV = [
-    {"slug": "brightspace", "label": "Brightspace ↗", "status": "locked",
-     "aria": "Brightspace — link coming soon", "extra_class": "bs"},
+    {"slug": "brightspace", "label": "Brightspace ↗", "status": "open",
+     "url": "https://brightspace.cuny.edu/d2l/home/1270447", "extra_class": "bs"},
 ]
 
 # Pages to generate
@@ -327,7 +329,9 @@ def render_nav(current_nav):
                 f'aria-label="{item["aria"]}">{item["label"]}</span>'
             )
         else:
-            items.append(f'  <a href="{item["slug"]}.html">{item["label"]}</a>')
+            href = item.get("url", f'{item["slug"]}.html')
+            tgt = ' target="_blank" rel="noopener"' if item.get("external") else ''
+            items.append(f'  <a href="{href}"{tgt}>{item["label"]}</a>')
 
     for item in EXTERNAL_NAV:
         extra = item.get("extra_class", "")
@@ -338,8 +342,9 @@ def render_nav(current_nav):
                 f'aria-label="{item["aria"]}">{item["label"]}</span>'
             )
         else:
+            href = item.get("url", "#")
             items.append(
-                f'  <a href="#" class="{extra}">{item["label"]}</a>'
+                f'  <a href="{href}" target="_blank" rel="noopener" class="{extra}">{item["label"]}</a>'
             )
 
     return "\n".join(items)
